@@ -1,0 +1,12 @@
+Django>=5.0
+djangorestframework
+django-cors-headers
+psycopg2-binary
+django-leaflet
+Pillow 
+drf-spectacular
+djangorestframework-simplejwt
+django-filter
+django-simple-history
+django-elasticsearch-dsl
+python-dotenv

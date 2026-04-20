@@ -19,19 +19,34 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from objects.views import ObjectSearchView
 
+from objects.views import (
+    ObjectViewSet, 
+    BusStopViewSet, 
+    ObjectSearchView
+)
 
-from objects.views import ObjectViewSet
-from interactions.views import ForumTopicViewSet, ForumPostViewSet, ReviewViewSet, RegisterView
+from interactions.views import (
+    ForumTopicViewSet, 
+    ForumPostViewSet, 
+    ReviewViewSet, 
+    RegisterView,
+    UserProfileView
+)
 
-
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView, 
+    TokenRefreshView
+)
+from drf_spectacular.views import (
+    SpectacularAPIView, 
+    SpectacularRedocView, 
+    SpectacularSwaggerView
+)
 
 router = DefaultRouter()
 router.register(r'api/objects', ObjectViewSet)
+router.register(r'api/bus-stops', BusStopViewSet)
 router.register(r'api/forum/topics', ForumTopicViewSet)
 router.register(r'api/forum/posts', ForumPostViewSet)
 router.register(r'api/reviews', ReviewViewSet)
@@ -46,8 +61,12 @@ urlpatterns = [
     
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    
     path('api/search/', ObjectSearchView.as_view(), name='object-search'),
+    path('api/me/', UserProfileView.as_view(), name='user-me'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

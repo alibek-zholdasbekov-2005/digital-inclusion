@@ -1,13 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- 1. Changed parent to .NoActionBar -->
     <style name="Theme.DigitalInclusionApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Назначаем цвета из нашего colors.xml -->
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorSecondary">@color/blue_light</item>
+        <item name="colorTertiary">@color/green_status</item>
 
-        <!-- 2. Primary brand colors (Blue to match your UI) -->
-        <item name="colorPrimary">#2196F3</item>
-        <item name="colorSecondary">#4CAF50</item>
-
-        <!-- 3. Make the status bar transparent for a full-screen map look -->
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

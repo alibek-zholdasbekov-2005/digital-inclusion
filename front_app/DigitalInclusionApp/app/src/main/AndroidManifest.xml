@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 1. РАЗРЕШЕНИЯ -->
+    <!-- Интернет нужен для связи с твоим Django/Render бэкендом -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Местоположение нужно для работы Google Карт -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,17 +18,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DigitalInclusionApp">
+
+        <!-- 2. КЛЮЧ GOOGLE MAPS -->
+        <!-- Убедись, что переменная MAPS_API_KEY прописана в secrets.properties или local.properties -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}"/>
+
+        <!-- 3. ЭКРАН ЛОГИНА (ТОЧКА ВХОДА) -->
+        <!-- Именно отсюда начнется запуск приложения -->
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 4. ЭКРАН РЕГИСТРАЦИИ -->
+        <activity
+            android:name=".activity.SignupActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- 5. ГЛАВНЫЙ ЭКРАН (МАГАЗИН/КАРТА) -->
+        <activity
+            android:name=".activity.StoreActivity"
+            android:exported="false" />
+
+        <!-- 6. СТАРЫЙ MAIN (если используешь) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
     </application>
 </manifest>

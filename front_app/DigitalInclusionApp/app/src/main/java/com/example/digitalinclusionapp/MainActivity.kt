@@ -1,28 +1,27 @@
 package com.example.digitalinclusionapp
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent // Important!
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.example.digitalinclusionapp.ui.MainMapScreen
-import com.example.digitalinclusionapp.ui.theme.DigitalInclusionAppTheme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.asLiveData
+import com.example.digitalinclusionapp.activity.LoginActivity
+import com.example.digitalinclusionapp.activity.StoreActivity
+import com.example.digitalinclusionapp.util.TokenManager
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Ensure NO 2GIS code is here!
+        val tokenManager = TokenManager(this)
 
-        enableEdgeToEdge()
-        setContent {
-            DigitalInclusionAppTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    MainMapScreen()
-                }
+        // Проверка токена: если есть — на главный экран, если нет — на логин
+        tokenManager.getToken().asLiveData().observe(this) { token ->
+            if (!token.isNullOrEmpty()) {
+                startActivity(Intent(this, StoreActivity::class.java))
+            } else {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
+            finish()
         }
     }
 }

@@ -1,42 +1,31 @@
-from django.conf import settings
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 from .models import *
 
-YANDEX_JS_URL = f'https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey={settings.YANDEX_MAPS_API_KEY}'
-
-class PhotoInline(admin.TabularInline): model = ObjectPhoto; extra = 1
-class SubObjectInline(admin.TabularInline): model = SubObject; extra = 0
-class TerritoryInline(admin.StackedInline): model = ObjectTerritory; extra = 1
-class EntranceInline(admin.StackedInline): model = EntranceGroup; extra = 1
+class TerritoryInline(admin.StackedInline): model = ObjectTerritory; extra = 0
+class EntranceInline(admin.StackedInline): model = EntranceGroup; extra = 0
+class MovementInline(admin.StackedInline): model = MovementWays; extra = 0
+class ServiceInline(admin.StackedInline): model = ServiceZones; extra = 0
+class SanitaryInline(admin.StackedInline): model = SanitaryRooms; extra = 0
+class InfoInline(admin.StackedInline): model = InfoTelecom; extra = 0
+class StopAccInline(admin.StackedInline): model = StopAccessibility; extra = 1; classes = ('collapse',)
+class StopPlatInline(admin.StackedInline): model = StopPlatform; extra = 1; classes = ('collapse',)
+class StopPavInline(admin.StackedInline): model = StopPavilion; extra = 1; classes = ('collapse',)
 
 @admin.register(AccessibilityObject)
 class AccessibilityObjectAdmin(LeafletGeoAdmin):
-    fieldsets = (
-        ('Статусы', {'fields': ('sending_status', 'report_photo', 'object_status')}),
-        ('Инфо', {'fields': ('name_ru', 'full_legal_name', 'district', 'street', 'house_number')}),
-        ('Карта', {'fields': ('location', 'polygon')}),
-        ('Тип', {'fields': ('category', 'activity_type', 'ownership_type', 'responsible_body')}),
-    )
-    inlines = [SubObjectInline, TerritoryInline, EntranceInline, PhotoInline]
-    class Media:
-        js = (
-            YANDEX_JS_URL,
-            'https://cdn.jsdelivr.net/gh/shramov/leaflet-plugins@master/layer/tile/Yandex.js',
-            'js/yandex_map.js',
-        )
+    inlines = [TerritoryInline, EntranceInline, MovementInline, ServiceInline, SanitaryInline, InfoInline]
 
-class StopAccInline(admin.StackedInline): model = StopAccessibility; extra = 1
-class StopPlatInline(admin.StackedInline): model = StopPlatform; extra = 1
-class StopPavInline(admin.StackedInline): model = StopPavilion; extra = 1
+@admin.register(ObjectAccessibilityResult)
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ('object', 'section', 'k_status', 'o_status', 'z_status', 's_status')
 
 @admin.register(BusStop)
 class BusStopAdmin(LeafletGeoAdmin):
-    list_display = ('stop_name', 'district')
+    fieldsets = (
+        ('Статусы', {'fields': ('sending_status', 'rejection_reason', 'report_photo'), 'classes': ('collapse',)}),
+        ('Инфо', {'fields': ('district', 'stop_name', 'comment', 'not_in_tx')}),
+        ('Карта', {'fields': ('location',)}),
+        ('Владение', {'fields': ('ownership_type', 'responsible_body')}),
+    )
     inlines = [StopAccInline, StopPlatInline, StopPavInline]
-    class Media:
-        js = (
-            YANDEX_JS_URL,
-            'https://cdn.jsdelivr.net/gh/shramov/leaflet-plugins@master/layer/tile/Yandex.js',
-            'js/yandex_map.js',
-        )

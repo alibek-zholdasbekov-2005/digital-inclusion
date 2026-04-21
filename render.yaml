@@ -20,7 +20,7 @@ services:
     region: frankfurt
     dockerfilePath: ./web/backend/Dockerfile
     dockerContext: ./web/backend
-    healthCheckPath: /api/schema/
+    healthCheckPath: /admin/login/
     autoDeploy: true
     branch: main
     envVars:

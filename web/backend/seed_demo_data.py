@@ -12,6 +12,16 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+def get_or_create_admin():
+    admin = User.objects.filter(is_superuser=True).first()
+    if not admin:
+        admin = User.objects.create_superuser(
+            username='admin',
+            email='admin@example.com',
+            password='admin_password123'
+        )
+    return admin
+
 def seed():
     print("Starting seeding demo data...")
     
@@ -53,7 +63,7 @@ def seed():
 
     # 3. Objects
     # Admin
-    admin_user = User.objects.filter(is_superuser=True).first()
+    admin_user = get_or_create_admin()
 
     objects_data = [
         {

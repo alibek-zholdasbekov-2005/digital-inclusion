@@ -23,7 +23,8 @@ from rest_framework.routers import DefaultRouter
 from objects.views import (
     ObjectViewSet, 
     BusStopViewSet, 
-    ObjectSearchView
+    ObjectSearchView,
+    HealthCheckView
 )
 
 from interactions.views import (
@@ -70,6 +71,7 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
     path('api/search/', ObjectSearchView.as_view(), name='object-search'),
+    path('api/health/', HealthCheckView.as_view(), name='health-check'),
     path('api/me/', UserProfileView.as_view(), name='user-me'),
 ]
 

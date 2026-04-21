@@ -130,3 +130,10 @@ class ObjectSearchView(APIView):
             ).filter(search=q)
             return Response(ObjectListSerializer(results, many=True).data)
         return Response([])
+
+
+class HealthCheckView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        return Response({"status": "up", "version": "v1.1-bonus"})

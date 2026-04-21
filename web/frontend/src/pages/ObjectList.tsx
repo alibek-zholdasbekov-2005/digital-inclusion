@@ -104,7 +104,7 @@ export default function ObjectList() {
           <option value="">{t('home.district_all')}</option>
           {districts.map((d) => (
             <option key={d.id} value={d.id}>
-              {i18n.language === 'en' ? d.name_en || d.name_ru : i18n.language === 'kk' ? d.name_kk || d.name_ru : d.name_ru}
+              {i18n.language === 'kk' ? d.name_kz || d.name_ru : d.name_ru}
             </option>
           ))}
         </select>
@@ -116,7 +116,7 @@ export default function ObjectList() {
           <option value="">{t('home.category_all')}</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
-              {i18n.language === 'en' ? c.name_en || c.name_ru : i18n.language === 'kk' ? c.name_kk || c.name_ru : c.name_ru}
+              {i18n.language === 'kk' ? c.name_kz || c.name_ru : c.name_ru}
             </option>
           ))}
         </select>
@@ -150,7 +150,7 @@ export default function ObjectList() {
               >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-semibold text-slate-900 line-clamp-2 flex-1">
-                    {i18n.language === 'en' ? obj.name_en || obj.name_ru : i18n.language === 'kk' ? obj.name_kk || obj.name_ru : obj.name_ru || 'Без названия'}
+                    {obj.name_ru || 'Без названия'}
                   </h3>
                   {typeof obj.avg_rating === 'number' && (
                     <span className="shrink-0 inline-flex items-center gap-1 text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">
@@ -167,7 +167,7 @@ export default function ObjectList() {
                         color: obj.category_info.color || '#2196F3',
                       }}
                     >
-                      {i18n.language === 'en' ? obj.category_info.name_en || obj.category_info.name_ru : i18n.language === 'kk' ? obj.category_info.name_kk || obj.category_info.name_ru : obj.category_info.name_ru}
+                      {obj.category_info.name_ru}
                     </span>
                   )}
                   {obj.district_name && (

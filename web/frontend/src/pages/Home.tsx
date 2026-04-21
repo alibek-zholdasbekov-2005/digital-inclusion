@@ -122,7 +122,7 @@ export default function Home() {
             <option value="">{t('home.category_all')}</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
-                {i18n.language === 'en' ? c.name_en || c.name_ru : i18n.language === 'kk' ? c.name_kk || c.name_ru : c.name_ru}
+                {i18n.language === 'kk' ? c.name_kz || c.name_ru : c.name_ru}
               </option>
             ))}
           </select>
@@ -136,7 +136,7 @@ export default function Home() {
             <option value="">{t('home.district_all')}</option>
             {districts.map((d) => (
               <option key={d.id} value={d.id}>
-                {i18n.language === 'en' ? d.name_en || d.name_ru : i18n.language === 'kk' ? d.name_kk || d.name_ru : d.name_ru}
+                {i18n.language === 'kk' ? d.name_kz || d.name_ru : d.name_ru}
               </option>
             ))}
           </select>
@@ -191,7 +191,8 @@ export default function Home() {
               <Popup>
                 <div className="min-w-[200px]">
                   <div className="font-semibold text-slate-900 mb-1">
-                    {i18n.language === 'en' ? obj.name_en || obj.name_ru : i18n.language === 'kk' ? obj.name_kk || obj.name_ru : obj.name_ru || 'Без названия'}
+                    {/* dynamic names are only stored as name_ru, no name_kz exists on AccessibilityObjectSummary in API currently but we can fallback just in case */}
+                    {obj.name_ru || 'Без названия'}
                   </div>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {obj.category_info && (
@@ -202,7 +203,8 @@ export default function Home() {
                           color: obj.category_info.color || '#2196F3',
                         }}
                       >
-                        {i18n.language === 'en' ? obj.category_info.name_en || obj.category_info.name_ru : i18n.language === 'kk' ? obj.category_info.name_kk || obj.category_info.name_ru : obj.category_info.name_ru}
+                        {/* We don't have name_kz in category_info returned by API either, but let's just use name_ru */}
+                        {obj.category_info.name_ru}
                       </span>
                     )}
                     {obj.district_name && (

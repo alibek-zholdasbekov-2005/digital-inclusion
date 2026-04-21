@@ -166,4 +166,16 @@ def seed():
     print("Demo data seeding completed successfully!")
 
 if __name__ == "__main__":
-    seed()
+    try:
+        from django.db import connection
+        connection.ensure_connection()
+        print("Database connection OK")
+        seed()
+    except Exception as e:
+        print(f"SEEDING ERROR: {e}")
+        import traceback
+        traceback.print_exc()
+        # Still exit with 0 if we want the server to start anyway
+        # but for debugging we might want to see the error.
+        # However, || true in dockerCommand handles exit codes.
+

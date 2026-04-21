@@ -50,10 +50,29 @@ class PhotoSerializer(serializers.ModelSerializer):
 class ObjectListSerializer(serializers.ModelSerializer):
     category_info = CategoryShortSerializer(source='category', read_only=True)
     district_name = serializers.ReadOnlyField(source='district.name_ru')
+    avg_rating = serializers.SerializerMethodField()
+    reviews_count = serializers.SerializerMethodField()
 
     class Meta:
         model = AccessibilityObject
-        fields = ['id', 'name_ru', 'location', 'district_name', 'category_info']
+        fields = [
+            'id', 'name_ru', 'location', 'district', 'district_name',
+            'category', 'category_info', 'avg_rating', 'reviews_count',
+        ]
+
+    def get_avg_rating(self, obj):
+        # Use annotation if present, otherwise fall back to aggregate
+        val = getattr(obj, '_avg_rating', None)
+        if val is None:
+            qs = obj.reviews.all()
+            if not qs.exists():
+                return None
+            val = sum(r.rating for r in qs) / qs.count()
+        return round(float(val), 1) if val is not None else None
+
+    def get_reviews_count(self, obj):
+        val = getattr(obj, '_reviews_count', None)
+        return int(val) if val is not None else obj.reviews.count()
 
 class AccessibilityObjectDetailSerializer(serializers.ModelSerializer):
     territory = TerritorySerializer(read_only=True)
@@ -64,13 +83,24 @@ class AccessibilityObjectDetailSerializer(serializers.ModelSerializer):
     info_telecom = InfoTelecomSerializer(read_only=True)
     photos = PhotoSerializer(many=True, read_only=True)
     results = ResultSerializer(many=True, read_only=True)
-    
+
     category_info = CategoryShortSerializer(source='category', read_only=True)
     district_name = serializers.ReadOnlyField(source='district.name_ru')
+    avg_rating = serializers.SerializerMethodField()
+    reviews_count = serializers.SerializerMethodField()
 
     class Meta:
         model = AccessibilityObject
         fields = '__all__'
+
+    def get_avg_rating(self, obj):
+        qs = obj.reviews.all()
+        if not qs.exists():
+            return None
+        return round(sum(r.rating for r in qs) / qs.count(), 1)
+
+    def get_reviews_count(self, obj):
+        return obj.reviews.count()
 
 class BusStopSerializer(serializers.ModelSerializer):
     class Meta:

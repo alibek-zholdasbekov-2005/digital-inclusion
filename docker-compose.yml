@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------------------
+# Digital Inclusion — full-stack compose (for local dev / demonstration)
+#
+# Services:
+#   db       — PostGIS 15 (database container, bonus)
+#   backend  — Django REST API (image built from ./backend)
+#   web      — React frontend served by nginx (image built from ./front_web)
+#
+# Run:
+#   docker compose up --build
+# Access:
+#   frontend    →  http://localhost:8080
+#   backend API →  http://localhost:8000/api/docs/
+# ---------------------------------------------------------------------------
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_DB: inclusion_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d inclusion_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"
+    environment:
+      DEBUG: "True"
+      DATABASE_URL: postgis://admin:secret_pass@db:5432/inclusion_db
+      SECRET_KEY: dev-compose-secret-key-change-me
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./front_web
+      args:
+        # Frontend calls backend via the public URL. For pure-local setup you
+        # can switch this to http://localhost:8000 and rebuild.
+        VITE_API_BASE_URL: https://backend-inclusion.onrender.com
+    environment:
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

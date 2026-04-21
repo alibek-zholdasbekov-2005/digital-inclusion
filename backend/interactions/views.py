@@ -1,8 +1,14 @@
 from rest_framework import viewsets, generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import ForumTopic, ForumPost, Review
+from .models import ForumTopic, ForumPost, Review, Favorite
 from django.contrib.auth.models import User
-from .serializers import ForumTopicSerializer, ForumPostSerializer, ReviewSerializer, UserSerializer
+from .serializers import (
+    ForumTopicSerializer,
+    ForumPostSerializer,
+    ReviewSerializer,
+    UserSerializer,
+    FavoriteSerializer,
+)
 from .auth_serializers import RegisterSerializer
 
 class RegisterView(generics.CreateAPIView):
@@ -51,3 +57,18 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class FavoriteViewSet(viewsets.ModelViewSet):
+    """Избранные объекты текущего пользователя."""
+    serializer_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['object']
+
+    def get_queryset(self):
+        return Favorite.objects.filter(user=self.request.user).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

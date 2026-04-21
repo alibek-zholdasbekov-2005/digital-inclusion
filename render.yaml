@@ -1,0 +1,25 @@
+# Render Blueprint for Digital Inclusion
+# Deploys the React frontend as a Docker web service.
+# The backend (backend-inclusion.onrender.com) is already deployed separately.
+#
+# Usage:
+#   1. Commit this file to the repo root.
+#   2. In Render dashboard: New → Blueprint → point at this repo.
+#   3. Render picks up this file and creates the service automatically.
+#
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: digital-inclusion-web
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./front_web/Dockerfile
+    dockerContext: ./front_web
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://backend-inclusion.onrender.com
+    healthCheckPath: /healthz
+    autoDeploy: true
+    branch: main

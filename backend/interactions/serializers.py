@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ForumTopic, ForumPost, Review
+from .models import ForumTopic, ForumPost, Review, Favorite
 from django.contrib.auth.models import User
 
 class ForumPostSerializer(serializers.ModelSerializer):
@@ -25,3 +25,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    object_name = serializers.ReadOnlyField(source='object.name_ru')
+
+    class Meta:
+        model = Favorite
+        fields = ['id', 'object', 'object_name', 'created_at']
+        read_only_fields = ['created_at']

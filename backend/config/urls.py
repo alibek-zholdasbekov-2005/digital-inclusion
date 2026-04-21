@@ -27,12 +27,15 @@ from objects.views import (
 )
 
 from interactions.views import (
-    ForumTopicViewSet, 
-    ForumPostViewSet, 
-    ReviewViewSet, 
+    ForumTopicViewSet,
+    ForumPostViewSet,
+    ReviewViewSet,
     RegisterView,
-    UserProfileView
+    UserProfileView,
+    FavoriteViewSet,
 )
+
+from directories.views import DistrictViewSet, CategoryViewSet
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView, 
@@ -50,6 +53,9 @@ router.register(r'api/bus-stops', BusStopViewSet)
 router.register(r'api/forum/topics', ForumTopicViewSet)
 router.register(r'api/forum/posts', ForumPostViewSet)
 router.register(r'api/reviews', ReviewViewSet)
+router.register(r'api/favorites', FavoriteViewSet, basename='favorite')
+router.register(r'api/districts', DistrictViewSet)
+router.register(r'api/categories', CategoryViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

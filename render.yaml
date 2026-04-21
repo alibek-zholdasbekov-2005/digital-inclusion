@@ -58,3 +58,5 @@ services:
     envVars:
       - key: VITE_API_BASE_URL
         sync: false   # set to https://<web-backend>.onrender.com after first deploy
+
+# Trigger sync

@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "map": "Map",
+    "objects": "Objects",
+    "forum": "Forum",
+    "favorites": "♡ Favorites",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+  },
+  "home": {
+    "title": "Digital Inclusion Map",
+    "search_placeholder": "Search by name or description...",
+    "category_all": "All Categories",
+    "district_all": "All Districts",
+    "search_btn": "Search",
+    "found": "Displayed: {{count}}"
+  },
+  "objects": {
+    "title": "Objects",
+    "reset_filters": "Reset filters",
+    "apply": "Apply",
+    "found": "Found: {{length}}",
+    "not_found": "Nothing found"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error loading",
+    "save": "Save",
+    "saving": "Saving...",
+    "send": "Send",
+    "sending": "Sending..."
+  }
+}

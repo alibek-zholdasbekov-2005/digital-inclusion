@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { listObjects, searchObjects } from '../api/objects'
 import { listDistricts, listCategories } from '../api/directories'
 import type {
@@ -10,6 +11,7 @@ import type {
 import Spinner from '../components/Spinner'
 
 export default function ObjectList() {
+  const { t, i18n } = useTranslation()
   const [objects, setObjects] = useState<AccessibilityObjectSummary[]>([])
   const [districts, setDistricts] = useState<District[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -49,7 +51,7 @@ export default function ObjectList() {
       }
       setObjects(data)
     } catch {
-      setError('Не удалось загрузить список объектов')
+      setError(t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -72,13 +74,13 @@ export default function ObjectList() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Объекты</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('objects.title')}</h1>
         {activeFilters > 0 && (
           <button
             onClick={resetFilters}
             className="text-sm text-slate-500 hover:text-brand-600"
           >
-            Сбросить фильтры ({activeFilters})
+            {t('objects.reset_filters')} ({activeFilters})
           </button>
         )}
       </div>
@@ -91,7 +93,7 @@ export default function ObjectList() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск по названию..."
+          placeholder={t('home.search_placeholder')}
           className="md:col-span-2 px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
         />
         <select
@@ -99,10 +101,10 @@ export default function ObjectList() {
           onChange={(e) => setDistrictId(e.target.value ? Number(e.target.value) : '')}
           className="px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 outline-none bg-white"
         >
-          <option value="">Все районы</option>
+          <option value="">{t('home.district_all')}</option>
           {districts.map((d) => (
             <option key={d.id} value={d.id}>
-              {d.name_ru}
+              {i18n.language === 'en' ? d.name_en || d.name_ru : i18n.language === 'kk' ? d.name_kk || d.name_ru : d.name_ru}
             </option>
           ))}
         </select>
@@ -111,10 +113,10 @@ export default function ObjectList() {
           onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : '')}
           className="px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 outline-none bg-white"
         >
-          <option value="">Все категории</option>
+          <option value="">{t('home.category_all')}</option>
           {categories.map((c) => (
             <option key={c.id} value={c.id}>
-              {c.name_ru}
+              {i18n.language === 'en' ? c.name_en || c.name_ru : i18n.language === 'kk' ? c.name_kk || c.name_ru : c.name_ru}
             </option>
           ))}
         </select>
@@ -122,7 +124,7 @@ export default function ObjectList() {
           type="submit"
           className="md:col-span-4 px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-md transition"
         >
-          Применить
+          {t('objects.apply')}
         </button>
       </form>
 
@@ -137,7 +139,7 @@ export default function ObjectList() {
       {!loading && !error && (
         <>
           <p className="text-sm text-slate-600 mb-3">
-            Найдено: {objects.length}
+            {t('objects.found', { length: objects.length })}
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {objects.map((obj) => (
@@ -148,7 +150,7 @@ export default function ObjectList() {
               >
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-semibold text-slate-900 line-clamp-2 flex-1">
-                    {obj.name_ru || 'Без названия'}
+                    {i18n.language === 'en' ? obj.name_en || obj.name_ru : i18n.language === 'kk' ? obj.name_kk || obj.name_ru : obj.name_ru || 'Без названия'}
                   </h3>
                   {typeof obj.avg_rating === 'number' && (
                     <span className="shrink-0 inline-flex items-center gap-1 text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">
@@ -165,7 +167,7 @@ export default function ObjectList() {
                         color: obj.category_info.color || '#2196F3',
                       }}
                     >
-                      {obj.category_info.name_ru}
+                      {i18n.language === 'en' ? obj.category_info.name_en || obj.category_info.name_ru : i18n.language === 'kk' ? obj.category_info.name_kk || obj.category_info.name_ru : obj.category_info.name_ru}
                     </span>
                   )}
                   {obj.district_name && (
@@ -186,7 +188,7 @@ export default function ObjectList() {
 
           {objects.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              Ничего не найдено
+              {t('objects.not_found')}
             </div>
           )}
         </>

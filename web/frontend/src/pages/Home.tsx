@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MapContainer, Marker, Popup, TileLayer, CircleMarker } from 'react-leaflet'
 import L from 'leaflet'
+import { useTranslation } from 'react-i18next'
 import { listObjects, listBusStops } from '../api/objects'
 import { listCategories, listDistricts } from '../api/directories'
 import { parsePoint } from '../api/geo'
@@ -29,6 +30,7 @@ L.Marker.prototype.options.icon = defaultIcon
 const ALMATY_CENTER: [number, number] = [43.2389, 76.8897]
 
 export default function Home() {
+  const { t, i18n } = useTranslation()
   const [objects, setObjects] = useState<AccessibilityObjectSummary[]>([])
   const [stops, setStops] = useState<BusStop[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -59,7 +61,7 @@ export default function Home() {
           setDistricts(dists)
         }
       } catch {
-        if (!cancelled) setError('Не удалось загрузить данные карты')
+        if (!cancelled) setError(t('common.error'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -68,7 +70,7 @@ export default function Home() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [t])
 
   const filteredObjects = useMemo(
     () =>
@@ -103,11 +105,10 @@ export default function Home() {
     <div className="relative h-[calc(100vh-8rem)]">
       <div className="absolute top-4 left-4 z-[400] bg-white rounded-lg shadow-lg border p-4 max-w-xs">
         <h1 className="text-lg font-bold text-slate-900 mb-1">
-          Доступный Алматы
+          {t('home.title')}
         </h1>
         <p className="text-xs text-slate-600 mb-3">
-          Карта объектов и остановок с данными доступности для маломобильных
-          граждан.
+          Карта объектов и остановок с данными доступности для маломобильных граждан.
         </p>
 
         <div className="space-y-2 mb-3">
@@ -118,10 +119,10 @@ export default function Home() {
             }
             className="w-full text-sm px-2 py-1 border rounded"
           >
-            <option value="">Все категории</option>
+            <option value="">{t('home.category_all')}</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.name_ru}
+                {i18n.language === 'en' ? c.name_en || c.name_ru : i18n.language === 'kk' ? c.name_kk || c.name_ru : c.name_ru}
               </option>
             ))}
           </select>
@@ -132,10 +133,10 @@ export default function Home() {
             }
             className="w-full text-sm px-2 py-1 border rounded"
           >
-            <option value="">Все районы</option>
+            <option value="">{t('home.district_all')}</option>
             {districts.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name_ru}
+                {i18n.language === 'en' ? d.name_en || d.name_ru : i18n.language === 'kk' ? d.name_kk || d.name_ru : d.name_ru}
               </option>
             ))}
           </select>
@@ -144,7 +145,7 @@ export default function Home() {
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded-full bg-brand-600 border-2 border-white shadow" />
-            <span>Объекты ({objectsWithCoords.length})</span>
+            <span>{t('nav.objects')} ({objectsWithCoords.length})</span>
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -162,13 +163,13 @@ export default function Home() {
           to="/objects"
           className="mt-3 block text-center text-sm bg-brand-600 hover:bg-brand-700 text-white py-2 rounded transition"
         >
-          Список объектов →
+          {t('nav.objects')} →
         </Link>
       </div>
 
       {loading && (
         <div className="absolute inset-0 bg-white/60 z-[450] flex items-center justify-center">
-          <Spinner label="Загружаем карту..." />
+          <Spinner label={t('common.loading')} />
         </div>
       )}
 
@@ -190,7 +191,7 @@ export default function Home() {
               <Popup>
                 <div className="min-w-[200px]">
                   <div className="font-semibold text-slate-900 mb-1">
-                    {obj.name_ru || 'Без названия'}
+                    {i18n.language === 'en' ? obj.name_en || obj.name_ru : i18n.language === 'kk' ? obj.name_kk || obj.name_ru : obj.name_ru || 'Без названия'}
                   </div>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {obj.category_info && (
@@ -201,7 +202,7 @@ export default function Home() {
                           color: obj.category_info.color || '#2196F3',
                         }}
                       >
-                        {obj.category_info.name_ru}
+                        {i18n.language === 'en' ? obj.category_info.name_en || obj.category_info.name_ru : i18n.language === 'kk' ? obj.category_info.name_kk || obj.category_info.name_ru : obj.category_info.name_ru}
                       </span>
                     )}
                     {obj.district_name && (

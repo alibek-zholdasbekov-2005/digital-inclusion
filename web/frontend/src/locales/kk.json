@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "map": "Карта",
+    "objects": "Нысандар",
+    "forum": "Форум",
+    "favorites": "♡ Таңдаулылар",
+    "logout": "Шығу",
+    "login": "Кіру",
+    "register": "Тіркелу"
+  },
+  "home": {
+    "title": "Digital Inclusion Карта",
+    "search_placeholder": "Атауы немесе сипаттамасы бойынша іздеу...",
+    "category_all": "Барлық санаттар",
+    "district_all": "Барлық аудандар",
+    "search_btn": "Іздеу",
+    "found": "Көрсетілді: {{count}}"
+  },
+  "objects": {
+    "title": "Нысандар",
+    "reset_filters": "Сүзгілерді қалпына келтіру",
+    "apply": "Қолдану",
+    "found": "Табылды: {{length}}",
+    "not_found": "Ештеңе табылмады"
+  },
+  "common": {
+    "loading": "Жүктелуде...",
+    "error": "Жүктеу қатесі",
+    "save": "Сақтау",
+    "saving": "Сақталуда...",
+    "send": "Жіберу",
+    "sending": "Жіберілуде..."
+  }
+}

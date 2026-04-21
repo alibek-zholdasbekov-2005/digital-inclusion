@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../store/auth'
+import { useTranslation } from 'react-i18next'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `px-3 py-2 rounded-md text-sm font-medium transition ${
@@ -11,10 +12,15 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
 export default function Navbar() {
   const { user, signOut } = useAuth()
   const navigate = useNavigate()
+  const { t, i18n } = useTranslation()
 
   const onLogout = () => {
     signOut()
     navigate('/login')
+  }
+
+  const changeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value)
   }
 
   return (
@@ -32,22 +38,32 @@ export default function Navbar() {
 
         <nav className="flex-1 flex items-center gap-1">
           <NavLink to="/" end className={navClass}>
-            Карта
+            {t('nav.map')}
           </NavLink>
           <NavLink to="/objects" className={navClass}>
-            Объекты
+            {t('nav.objects')}
           </NavLink>
           <NavLink to="/forum" className={navClass}>
-            Форум
+            {t('nav.forum')}
           </NavLink>
           {user && (
             <NavLink to="/favorites" className={navClass}>
-              ♡ Избранное
+              {t('nav.favorites')}
             </NavLink>
           )}
         </nav>
 
         <div className="flex items-center gap-2">
+          <select 
+            className="text-sm bg-slate-50 border-slate-200 text-slate-700 rounded mr-2 focus:ring-brand-500 focus:border-brand-500" 
+            value={i18n.language} 
+            onChange={changeLang}
+          >
+            <option value="ru">Рус</option>
+            <option value="en">Eng</option>
+            <option value="kk">Қаз</option>
+          </select>
+
           {user ? (
             <>
               <NavLink to="/profile" className={navClass}>
@@ -57,19 +73,19 @@ export default function Navbar() {
                 onClick={onLogout}
                 className="px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition"
               >
-                Выйти
+                {t('nav.logout')}
               </button>
             </>
           ) : (
             <>
               <NavLink to="/login" className={navClass}>
-                Войти
+                {t('nav.login')}
               </NavLink>
               <NavLink
                 to="/register"
                 className="px-3 py-2 rounded-md text-sm font-medium bg-brand-600 text-white hover:bg-brand-700 transition"
               >
-                Регистрация
+                {t('nav.register')}
               </NavLink>
             </>
           )}

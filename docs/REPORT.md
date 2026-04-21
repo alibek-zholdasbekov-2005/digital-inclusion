@@ -114,9 +114,25 @@ CI падает — мердж в main блокируется (если наст
 - **Нет e2e-тестов.** В CI собирается только сборка. Следующий шаг: Playwright-smoke на ключевых сценариях.
 - **Нет push-уведомлений** для новых сообщений форума. Обсуждается Firebase Cloud Messaging для мобилки.
 
-## 10. Ссылки
+| Требование                                | Статус |
+|-------------------------------------------|--------|
+| Приложение в Docker-контейнере            | ✅ Frontend и backend в Docker     |
+| Публичный URL                             | ✅ Backend + Frontend на Render    |
+| Git-репозиторий                           | ✅ github.com/alibek-zholdasbekov-2005/digital-inclusion |
+| Отчёт 2–4 страницы                        | ✅ этот файл                        |
+| **Бонус:** CI/CD                          | ✅ GitHub Actions (build/lint)      |
+| **Бонус:** Оркестрация                    | ✅ Unified Docker Compose           |
+| **Бонус:** Kubernetes                     | ✅ Манифесты в `web/k8s/`           |
+| **Бонус:** Мониторинг                     | ✅ Health Check API (/api/health/)  |
+| **Бонус:** Мультиязычность                | ✅ i18n (KK, RU, EN)                |
+| **Бонус:** HTTPS                          | ✅ SSL Сертификаты от Render        |
 
-- Исходный код: <https://github.com/alibek-zholdasbekov-2005/digital-inclusion>
-- Backend API: <https://backend-inclusion.onrender.com>
-- Swagger: <https://backend-inclusion.onrender.com/api/docs/>
-- Веб-версия: будет выдан публичный URL после первого деплоя из `render.yaml`
+## 9. Деплой и мониторинг
+Проект развернут на платформе Render по облачной модели PaaS. Для постоянного контроля работоспособности внедрен эндпоинт `/api/health/`, который позволяет внешним системам мониторинга проверять статус приложения. База данных PostGIS вынесена в отдельный высоконадежный сервис.
+
+## 10. Ссылки
+- **Репозиторий**: <https://github.com/alibek-zholdasbekov-2005/digital-inclusion>
+- **Frontend SPA**: <https://web-frontend-dhwe.onrender.com/>
+- **Backend API**: <https://web-backend-hgm5.onrender.com/api/objects/>
+- **Swagger Docs**: <https://web-backend-hgm5.onrender.com/api/docs/>
+- **Health check**: <https://web-backend-hgm5.onrender.com/api/health/>

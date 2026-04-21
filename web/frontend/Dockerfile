@@ -14,7 +14,7 @@ COPY public ./public
 COPY src ./src
 
 # Allow baking API URL into the production bundle
-ARG VITE_API_BASE_URL=https://backend-inclusion.onrender.com
+ARG VITE_API_BASE_URL=http://localhost:8000
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
 RUN npm run build

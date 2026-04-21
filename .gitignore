@@ -36,3 +36,9 @@ media/local/
 backend/db.sqlite3
 backend/staticfiles/
 backend/media/
+web/backend/db.sqlite3
+web/backend/staticfiles/
+web/backend/media/
+
+# Legacy (superseded by web/frontend/)
+/front_web/

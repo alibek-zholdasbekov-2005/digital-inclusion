@@ -42,3 +42,30 @@ export async function nearbyObjects(lat: number, lon: number, dist = 2000) {
   })
   return unwrap<AccessibilityObjectSummary>(data)
 }
+
+export async function createObject(payload: Partial<AccessibilityObjectDetail>) {
+  const { data } = await api.post('/api/objects/', payload)
+  return data as AccessibilityObjectDetail
+}
+
+export async function updateObject(
+  id: number | string,
+  payload: Partial<AccessibilityObjectDetail>,
+) {
+  const { data } = await api.patch(`/api/objects/${id}/`, payload)
+  return data as AccessibilityObjectDetail
+}
+
+export async function submitObject(id: number | string) {
+  const { data } = await api.post(`/api/objects/${id}/submit/`)
+  return data as AccessibilityObjectDetail
+}
+
+export async function uploadObjectPhoto(id: number | string, file: File) {
+  const form = new FormData()
+  form.append('image', file)
+  const { data } = await api.post(`/api/objects/${id}/photos/`, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return data as { id: number; image: string }
+}

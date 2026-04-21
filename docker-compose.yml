@@ -1,17 +1,6 @@
-# ---------------------------------------------------------------------------
-# Digital Inclusion — full-stack compose (for local dev / demonstration)
-#
-# Services:
-#   db       — PostGIS 15 (database container, bonus)
-#   backend  — Django REST API (image built from ./backend)
-#   web      — React frontend served by nginx (image built from ./front_web)
-#
-# Run:
-#   docker compose up --build
-# Access:
-#   frontend    →  http://localhost:8080
-#   backend API →  http://localhost:8000/api/docs/
-# ---------------------------------------------------------------------------
+# Mobile stack — backend only (shared by Android app).
+# For the WEB stack, use ./web/docker-compose.yml instead:
+#   docker compose -f web/docker-compose.yml up --build
 
 services:
   db:
@@ -44,21 +33,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: unless-stopped
-
-  web:
-    build:
-      context: ./front_web
-      args:
-        # Frontend calls backend via the public URL. For pure-local setup you
-        # can switch this to http://localhost:8000 and rebuild.
-        VITE_API_BASE_URL: https://backend-inclusion.onrender.com
-    environment:
-      PORT: 8080
-    ports:
-      - "8080:8080"
-    depends_on:
-      - backend
     restart: unless-stopped
 
 volumes:

@@ -28,9 +28,15 @@ export interface AccessibilityObjectSummary {
   accessibility_summary?: string
   avg_rating?: number | null
   reviews_count?: number
+  moderation_state?: 'draft' | 'pending' | 'approved' | 'rejected'
 }
 
 export interface AccessibilityObjectDetail extends AccessibilityObjectSummary {
+  rejection_reason?: string
+  created_by?: number | null
+  created_by_username?: string | null
+  created_at?: string | null
+  updated_at?: string | null
   full_legal_name: string | null
   activity_type: number | null
   ownership_type: number | null

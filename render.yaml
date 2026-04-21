@@ -1,25 +1,60 @@
-# Render Blueprint for Digital Inclusion
-# Deploys the React frontend as a Docker web service.
-# The backend (backend-inclusion.onrender.com) is already deployed separately.
+# Render Blueprint — Web version of Digital Inclusion.
+# The mobile stack (root `backend/`, `front_app/`) is deployed separately and
+# is NOT referenced here. Everything under `web/` lives on its own infra.
 #
-# Usage:
-#   1. Commit this file to the repo root.
-#   2. In Render dashboard: New → Blueprint → point at this repo.
-#   3. Render picks up this file and creates the service automatically.
-#
-# Docs: https://render.com/docs/blueprint-spec
+# Services:
+#   web-backend   — Django + DRF + PostGIS (private DB below)
+#   web-frontend  — React+Vite static site served by nginx
+#   web-db        — managed PostGIS database
+databases:
+  - name: web-db
+    plan: free
+    region: frankfurt
+    postgresMajorVersion: "15"
 
 services:
   - type: web
-    name: digital-inclusion-web
+    name: web-backend
     runtime: docker
     plan: free
     region: frankfurt
-    dockerfilePath: ./front_web/Dockerfile
-    dockerContext: ./front_web
+    dockerfilePath: ./web/backend/Dockerfile
+    dockerContext: ./web/backend
+    healthCheckPath: /api/schema/
+    autoDeploy: true
+    branch: main
     envVars:
-      - key: VITE_API_BASE_URL
-        value: https://backend-inclusion.onrender.com
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: web-db
+          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com"
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false   # set to the frontend URL once known
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  - type: web
+    name: web-frontend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./web/frontend/Dockerfile
+    dockerContext: ./web/frontend
     healthCheckPath: /healthz
     autoDeploy: true
     branch: main
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false   # set to https://<web-backend>.onrender.com after first deploy

@@ -1,11 +1,13 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { createTopic, listTopics } from '../api/forum'
 import type { ForumTopic } from '../types'
 import { useAuth } from '../store/auth'
 import Spinner from '../components/Spinner'
 
 export default function Forum() {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const [topics, setTopics] = useState<ForumTopic[]>([])
   const [loading, setLoading] = useState(true)
@@ -19,6 +21,7 @@ export default function Forum() {
 
   useEffect(() => {
     load('')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function load(search: string) {
@@ -27,7 +30,7 @@ export default function Forum() {
       const data = await listTopics(search || undefined)
       setTopics(data)
     } catch {
-      setError('Не удалось загрузить темы')
+      setError(t('forum.no_topics'))
     } finally {
       setLoading(false)
     }
@@ -51,7 +54,7 @@ export default function Forum() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail || 'Не удалось создать тему'
+          ?.detail || t('common.error')
       setCreateErr(msg)
     } finally {
       setCreating(false)
@@ -61,13 +64,13 @@ export default function Forum() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Форум</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('forum.title')}</h1>
         {user && (
           <button
             onClick={() => setShowForm((v) => !v)}
             className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-md transition"
           >
-            {showForm ? 'Отмена' : '+ Новая тема'}
+            {showForm ? t('forum.cancel') : `+ ${t('forum.new_topic')}`}
           </button>
         )}
       </div>
@@ -81,7 +84,7 @@ export default function Forum() {
             type="text"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Название темы"
+            placeholder={t('forum.topic_title_placeholder')}
             required
             autoFocus
             className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
@@ -92,7 +95,7 @@ export default function Forum() {
             disabled={creating || !newTitle.trim()}
             className="px-4 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white rounded transition"
           >
-            {creating ? 'Создаём...' : 'Создать тему'}
+            {creating ? t('auth.creating') : t('forum.create_topic_btn')}
           </button>
         </form>
       )}
@@ -102,14 +105,14 @@ export default function Forum() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Поиск по темам..."
+          placeholder={t('forum.search_placeholder')}
           className="flex-1 px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
         />
         <button
           type="submit"
           className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md transition"
         >
-          Найти
+          {t('forum.find')}
         </button>
       </form>
 
@@ -147,7 +150,7 @@ export default function Forum() {
           ))}
           {topics.length === 0 && (
             <div className="text-center py-12 text-slate-500">
-              Пока нет тем. {user && 'Создайте первую!'}
+              {t('forum.no_topics')} {user && t('forum.create_first')}
             </div>
           )}
         </div>

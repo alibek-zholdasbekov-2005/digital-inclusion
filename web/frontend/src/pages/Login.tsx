@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../store/auth'
 
 export default function Login() {
+  const { t } = useTranslation()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -21,7 +23,7 @@ export default function Login() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail || 'Неверный логин или пароль'
+          ?.detail || t('common.error')
       setError(msg)
     }
   }
@@ -29,11 +31,11 @@ export default function Login() {
   return (
     <div className="max-w-md mx-auto mt-12 px-4">
       <div className="bg-white rounded-xl shadow-sm border p-8">
-        <h1 className="text-2xl font-bold mb-6 text-slate-900">Вход</h1>
+        <h1 className="text-2xl font-bold mb-6 text-slate-900">{t('nav.login')}</h1>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Имя пользователя
+              {t('auth.username')}
             </label>
             <input
               type="text"
@@ -46,7 +48,7 @@ export default function Login() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Пароль
+              {t('auth.password')}
             </label>
             <input
               type="password"
@@ -68,14 +70,14 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-medium py-2 rounded-md transition"
           >
-            {loading ? 'Входим...' : 'Войти'}
+            {loading ? t('auth.logging_in') : t('auth.login_btn')}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-600">
-          Нет аккаунта?{' '}
+          {t('auth.no_account')}{' '}
           <Link to="/register" className="text-brand-600 hover:underline">
-            Зарегистрироваться
+            {t('auth.registration')}
           </Link>
         </p>
       </div>

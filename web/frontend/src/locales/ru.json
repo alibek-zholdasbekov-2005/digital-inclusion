@@ -23,6 +23,49 @@
     "found": "Найдено: {{length}}",
     "not_found": "Ничего не найдено"
   },
+  "auth": {
+    "username": "Имя пользователя",
+    "email": "Email",
+    "password": "Пароль",
+    "registration": "Регистрация",
+    "create_account": "Создать аккаунт",
+    "creating": "Создаём...",
+    "already_have_account": "Уже есть аккаунт?",
+    "no_account": "Нет аккаунта?",
+    "login_btn": "Войти",
+    "logging_in": "Входим..."
+  },
+  "forum": {
+    "title": "Форум",
+    "new_topic": "Новая тема",
+    "cancel": "Отмена",
+    "topic_title_placeholder": "Название темы",
+    "create_topic_btn": "Создать тему",
+    "search_placeholder": "Поиск по темам...",
+    "find": "Найти",
+    "no_topics": "Пока нет тем.",
+    "create_first": "Создайте первую!",
+    "back_to_forum": "← К форуму",
+    "created_at": "Создано",
+    "message_placeholder": "Ваше сообщение...",
+    "attach_photo": "📎 Прикрепить фото",
+    "replace_photo": "📎 Заменить фото",
+    "delete": "удалить",
+    "login_to_post": "Войдите, чтобы оставить сообщение"
+  },
+  "profile": {
+    "title": "Профиль",
+    "saved": "Сохранено"
+  },
+  "favorites": {
+    "title": "Избранное",
+    "no_favorites": "Пока нет избранных объектов.",
+    "go_to_list": "Перейти к списку →"
+  },
+  "not_found": {
+    "title": "Страница не найдена",
+    "go_home": "На главную"
+  },
   "common": {
     "loading": "Загрузка...",
     "error": "Ошибка загрузки",

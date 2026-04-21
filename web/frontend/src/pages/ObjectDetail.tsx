@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getObject } from '../api/objects'
 import { createReview, listReviews } from '../api/reviews'
 import { addFavorite, findFavorite, removeFavorite } from '../api/favorites'
@@ -67,6 +68,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
 export default function ObjectDetail() {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
+  const { t, i18n } = useTranslation()
   const [obj, setObj] = useState<AccessibilityObjectDetail | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
@@ -97,7 +99,7 @@ export default function ObjectDetail() {
           setReviews(r)
         }
       } catch {
-        if (!cancelled) setError('Объект не найден')
+        if (!cancelled) setError(t('common.error'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -106,7 +108,7 @@ export default function ObjectDetail() {
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [id, t])
 
   // Check favorite status when user + id are known
   useEffect(() => {
@@ -154,7 +156,7 @@ export default function ObjectDetail() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail || 'Не удалось отправить отзыв'
+          ?.detail || t('common.error')
       setSubmitErr(msg)
     } finally {
       setSubmitting(false)
@@ -166,9 +168,9 @@ export default function ObjectDetail() {
   if (error || !obj) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12 text-center">
-        <p className="text-slate-600">{error || 'Объект не найден'}</p>
+        <p className="text-slate-600">{error || t('common.error')}</p>
         <Link to="/objects" className="text-brand-600 hover:underline mt-4 inline-block">
-          ← К списку объектов
+          ← {t('nav.objects')}
         </Link>
       </div>
     )
@@ -189,7 +191,7 @@ export default function ObjectDetail() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link to="/objects" className="text-sm text-slate-500 hover:text-brand-600">
-        ← К списку
+        ← {t('nav.objects')}
       </Link>
 
       <div className="flex items-start justify-between gap-4 mt-4 mb-2">
@@ -200,7 +202,7 @@ export default function ObjectDetail() {
           <button
             onClick={toggleFavorite}
             disabled={favBusy}
-            aria-label={favorite ? 'Убрать из избранного' : 'Добавить в избранное'}
+            aria-label="Toggle Favorite"
             className={`shrink-0 w-11 h-11 rounded-full border flex items-center justify-center text-xl transition ${
               favorite
                 ? 'bg-red-50 border-red-300 text-red-500'
@@ -232,7 +234,7 @@ export default function ObjectDetail() {
         {typeof avg === 'number' && (
           <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700">
             ★ {avg.toFixed(1)}
-            {reviewsCount ? ` · ${reviewsCount} отз.` : ''}
+            {reviewsCount ? ` · ${reviewsCount} ` : ''}
           </span>
         )}
       </div>
@@ -329,13 +331,13 @@ export default function ObjectDetail() {
             className="bg-white border rounded-xl p-5 mb-5 space-y-3"
           >
             <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-700">Ваша оценка:</span>
+              <span className="text-sm text-slate-700">Оценка:</span>
               <Stars value={rating} onChange={setRating} />
             </div>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Поделитесь опытом посещения..."
+              placeholder="..."
               rows={3}
               required
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
@@ -375,15 +377,14 @@ export default function ObjectDetail() {
               disabled={submitting || !text.trim()}
               className="px-4 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white rounded transition"
             >
-              {submitting ? 'Отправка...' : 'Оставить отзыв'}
+              {submitting ? t('common.sending') : t('common.send')}
             </button>
           </form>
         ) : (
           <div className="bg-slate-50 border rounded-xl p-4 mb-5 text-sm text-slate-600">
             <Link to="/login" className="text-brand-600 hover:underline">
-              Войдите
+              {t('nav.login')}
             </Link>
-            , чтобы оставить отзыв
           </div>
         )}
 
@@ -395,12 +396,12 @@ export default function ObjectDetail() {
                   <Stars value={r.rating} />
                   {r.author_name && (
                     <span className="text-sm text-slate-600">
-                      {r.author_name}
+                       {r.author_name}
                     </span>
                   )}
                 </div>
                 <span className="text-xs text-slate-500">
-                  {new Date(r.created_at).toLocaleDateString('ru-RU')}
+                   {new Date(r.created_at).toLocaleDateString('ru-RU')}
                 </span>
               </div>
               <p className="text-sm text-slate-800 whitespace-pre-line">{r.text}</p>
@@ -416,7 +417,7 @@ export default function ObjectDetail() {
           ))}
           {reviews.length === 0 && (
             <p className="text-sm text-slate-500 text-center py-6">
-              Отзывов пока нет. Будьте первым!
+              Отзывов пока нет
             </p>
           )}
         </div>

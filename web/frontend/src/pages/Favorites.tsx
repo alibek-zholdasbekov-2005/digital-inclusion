@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { listFavorites, removeFavorite } from '../api/favorites'
 import type { Favorite } from '../types'
 import Spinner from '../components/Spinner'
 
 export default function Favorites() {
+  const { t } = useTranslation()
   const [items, setItems] = useState<Favorite[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -18,7 +20,7 @@ export default function Favorites() {
         const data = await listFavorites()
         if (!cancelled) setItems(data)
       } catch {
-        if (!cancelled) setError('Не удалось загрузить избранное')
+        if (!cancelled) setError(t('favorites.no_favorites'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -27,7 +29,7 @@ export default function Favorites() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [t])
 
   const onRemove = async (favId: number) => {
     setBusyId(favId)
@@ -44,7 +46,7 @@ export default function Favorites() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">
-        Избранное ({items.length})
+        {t('favorites.title')} ({items.length})
       </h1>
 
       {error && (
@@ -55,9 +57,9 @@ export default function Favorites() {
 
       {items.length === 0 && !error && (
         <div className="text-center py-12 text-slate-500">
-          Пока нет избранных объектов.{' '}
+          {t('favorites.no_favorites')}{' '}
           <Link to="/objects" className="text-brand-600 hover:underline">
-            Перейти к списку →
+            {t('favorites.go_to_list')}
           </Link>
         </div>
       )}

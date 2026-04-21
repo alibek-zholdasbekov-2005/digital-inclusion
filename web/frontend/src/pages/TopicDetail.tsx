@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { createPost, getTopic, listPosts } from '../api/forum'
 import type { ForumPost, ForumTopic } from '../types'
 import { useAuth } from '../store/auth'
@@ -10,6 +11,7 @@ function authorName(p: ForumPost | ForumTopic): string {
 }
 
 export default function TopicDetail() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
 
@@ -29,16 +31,16 @@ export default function TopicDetail() {
     async function load() {
       setLoading(true)
       try {
-        const [t, p] = await Promise.all([
+        const [tData, pData] = await Promise.all([
           getTopic(id!),
           listPosts(id!).catch(() => []),
         ])
         if (!cancelled) {
-          setTopic(t)
-          setPosts(p)
+          setTopic(tData)
+          setPosts(pData)
         }
       } catch {
-        if (!cancelled) setError('Тема не найдена')
+        if (!cancelled) setError(t('common.error'))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -47,7 +49,7 @@ export default function TopicDetail() {
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [id, t])
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -62,7 +64,7 @@ export default function TopicDetail() {
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail || 'Не удалось отправить сообщение'
+          ?.detail || t('common.error')
       setSubmitErr(msg)
     } finally {
       setSubmitting(false)
@@ -74,9 +76,9 @@ export default function TopicDetail() {
   if (error || !topic) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <p className="text-slate-600">{error || 'Тема не найдена'}</p>
+        <p className="text-slate-600">{error || t('common.error')}</p>
         <Link to="/forum" className="text-brand-600 hover:underline mt-4 inline-block">
-          ← К списку тем
+          {t('forum.back_to_forum')}
         </Link>
       </div>
     )
@@ -85,14 +87,14 @@ export default function TopicDetail() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <Link to="/forum" className="text-sm text-slate-500 hover:text-brand-600">
-        ← К форуму
+        {t('forum.back_to_forum')}
       </Link>
 
       <h1 className="text-2xl font-bold text-slate-900 mt-4 mb-1">
         {topic.title}
       </h1>
       <p className="text-sm text-slate-500 mb-6">
-        Создано: {new Date(topic.created_at).toLocaleString('ru-RU')}
+        {t('forum.created_at')}: {new Date(topic.created_at).toLocaleString('ru-RU')}
       </p>
 
       <div className="space-y-3 mb-6">
@@ -119,7 +121,7 @@ export default function TopicDetail() {
         ))}
         {posts.length === 0 && (
           <p className="text-sm text-slate-500 text-center py-6">
-            Пока нет сообщений
+            {t('forum.no_posts_yet', 'Пока нет сообщений')}
           </p>
         )}
       </div>
@@ -132,7 +134,7 @@ export default function TopicDetail() {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Ваше сообщение..."
+            placeholder={t('forum.message_placeholder')}
             rows={3}
             required
             className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none"
@@ -140,7 +142,7 @@ export default function TopicDetail() {
           <div className="flex items-center gap-3">
             <label className="inline-flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
               <span className="px-3 py-1.5 border rounded-md hover:bg-slate-50">
-                {image ? '📎 Заменить' : '📎 Прикрепить фото'}
+                {image ? t('forum.replace_photo') : t('forum.attach_photo')}
               </span>
               <input
                 type="file"
@@ -159,7 +161,7 @@ export default function TopicDetail() {
                   onClick={() => setImage(null)}
                   className="text-xs text-red-500 hover:underline"
                 >
-                  удалить
+                  {t('forum.delete')}
                 </button>
               </>
             )}
@@ -170,15 +172,15 @@ export default function TopicDetail() {
             disabled={submitting || !text.trim()}
             className="px-4 py-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white rounded transition"
           >
-            {submitting ? 'Отправка...' : 'Отправить'}
+            {submitting ? t('auth.creating') : t('common.send')}
           </button>
         </form>
       ) : (
         <div className="bg-slate-50 border rounded-xl p-4 text-sm text-slate-600">
           <Link to="/login" className="text-brand-600 hover:underline">
-            Войдите
+            {t('nav.login')}
           </Link>
-          , чтобы оставить сообщение
+          {t('forum.login_to_post')}
         </div>
       )}
     </div>

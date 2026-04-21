@@ -23,6 +23,49 @@
     "found": "Табылды: {{length}}",
     "not_found": "Ештеңе табылмады"
   },
+  "auth": {
+    "username": "Пайдаланушы аты",
+    "email": "Email",
+    "password": "Құпия сөз",
+    "registration": "Тіркелу",
+    "create_account": "Тіркелгі жасау",
+    "creating": "Жасалуда...",
+    "already_have_account": "Тіркелгі бар ма?",
+    "no_account": "Тіркелгі жоқ па?",
+    "login_btn": "Кіру",
+    "logging_in": "Кіруде..."
+  },
+  "forum": {
+    "title": "Форум",
+    "new_topic": "Жаңа тақырып",
+    "cancel": "Болдырмау",
+    "topic_title_placeholder": "Тақырып атауы",
+    "create_topic_btn": "Тақырыпты ашу",
+    "search_placeholder": "Тақырыптарды іздеу...",
+    "find": "Табу",
+    "no_topics": "Әзірге тақырыптар жоқ.",
+    "create_first": "Алғашқысын жасаңыз!",
+    "back_to_forum": "← Форумға оралу",
+    "created_at": "Жасалды",
+    "message_placeholder": "Сіздің хабарламаңыз...",
+    "attach_photo": "📎 Сурет қосу",
+    "replace_photo": "📎 Суретті ауыстыру",
+    "delete": "жою",
+    "login_to_post": "Хабарлама қалдыру үшін жүйеге кіріңіз"
+  },
+  "profile": {
+    "title": "Профиль",
+    "saved": "Сақталды"
+  },
+  "favorites": {
+    "title": "Таңдаулылар",
+    "no_favorites": "Әзірге таңдаулы нысандар жоқ.",
+    "go_to_list": "Тізімге өту →"
+  },
+  "not_found": {
+    "title": "Бет табылмады",
+    "go_home": "Басты бетке"
+  },
   "common": {
     "loading": "Жүктелуде...",
     "error": "Жүктеу қатесі",

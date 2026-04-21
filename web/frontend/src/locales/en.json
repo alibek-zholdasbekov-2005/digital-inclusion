@@ -23,6 +23,49 @@
     "found": "Found: {{length}}",
     "not_found": "Nothing found"
   },
+  "auth": {
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "registration": "Registration",
+    "create_account": "Create Account",
+    "creating": "Creating...",
+    "already_have_account": "Already have an account?",
+    "no_account": "No account?",
+    "login_btn": "Login",
+    "logging_in": "Logging in..."
+  },
+  "forum": {
+    "title": "Forum",
+    "new_topic": "New Topic",
+    "cancel": "Cancel",
+    "topic_title_placeholder": "Topic Title",
+    "create_topic_btn": "Create Topic",
+    "search_placeholder": "Search topics...",
+    "find": "Find",
+    "no_topics": "No topics yet.",
+    "create_first": "Create the first one!",
+    "back_to_forum": "← To Forum",
+    "created_at": "Created",
+    "message_placeholder": "Your message...",
+    "attach_photo": "📎 Attach Photo",
+    "replace_photo": "📎 Replace Photo",
+    "delete": "delete",
+    "login_to_post": "Login to leave a comment"
+  },
+  "profile": {
+    "title": "Profile",
+    "saved": "Saved"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "no_favorites": "No favorite objects yet.",
+    "go_to_list": "Go to list →"
+  },
+  "not_found": {
+    "title": "Page Not Found",
+    "go_home": "Go Home"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error loading",
